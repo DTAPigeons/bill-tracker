@@ -11,8 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
-using BillTrackerAPI.Models;
+using BillTrackerAPI.Data.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using BillTrackerAPI.Data.MongoDB;
+using BillTrackerAPI.Data;
 
 namespace BillTrackerAPI
 {
@@ -28,14 +31,41 @@ namespace BillTrackerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BillTrackerContext>(opt =>
-    opt.UseSqlServer(Configuration.GetConnectionString("BillTrackerContext")));
+            services.AddRazorPages();
+
+            
+            services.Configure<MongoDBSettings>(
+                Configuration.GetSection(nameof(MongoDBSettings)));
+
+            services.AddSingleton<IMongoDBSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
+
+            services.AddSingleton<UserService>();
+            services.AddSingleton<BillService>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Biil Tracker", Version = "v1" });
+            });
+
+            services.AddControllers()
+    .AddNewtonsoftJson(options => options.UseMemberCasing());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bill Tracker V1");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -44,6 +74,15 @@ namespace BillTrackerAPI
             {
                 app.UseHsts();
             }
+
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
 
             app.UseHttpsRedirection();
             
