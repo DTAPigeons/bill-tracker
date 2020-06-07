@@ -1,19 +1,22 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BillTrackerAPI.Models
+namespace BillTrackerAPI.Data.Models
 {
     public class Bill : BaseEntity
     {
-        public string Tittle { get; set; }
+        public string Name { get; set; }
         public double Amount { get; set; }
 
         public bool Recuring { get; set; }
 
-        public int UserId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string UserId { get; set; }
 
-        public virtual User User { get; set; }
     }
 }

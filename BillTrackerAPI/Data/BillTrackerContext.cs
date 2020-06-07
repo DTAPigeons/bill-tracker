@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BillTrackerAPI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BillTrackerAPI.Models
+namespace BillTrackerAPI.Data
 {
     public class BillTrackerContext : DbContext
     {
@@ -17,7 +18,13 @@ namespace BillTrackerAPI.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Bill> Bills { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>();
+            modelBuilder.Entity<Bill>();
+        }
 
     }
 }
