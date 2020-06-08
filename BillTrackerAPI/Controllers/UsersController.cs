@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BillTrackerAPI.Data.MongoDB;
 using BillTrackerAPI.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BillTrackerAPI.Controllers
 {
     [Route("api/Users")]
     [ApiController]
+    [Authorize]
     public class UsersController : BillTrackerController<UserService, User>
     {
         public UsersController(UserService service) : base(service)

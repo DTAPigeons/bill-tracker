@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillTrackerAPI", "BillTrackerAPI\BillTrackerAPI.csproj", "{0F32310C-A95E-405B-AB67-36D6D0015EF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BillTrackerAPI", "BillTrackerAPI\BillTrackerAPI.csproj", "{0F32310C-A95E-405B-AB67-36D6D0015EF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BillTrackerAuthentication", "BillTrackerAuthentication\BillTrackerAuthentication\BillTrackerAuthentication.csproj", "{B448282B-9940-42E5-81EB-ADC02E9B93CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavascriptClient", "JavascriptClient\JavascriptClient.csproj", "{AA8CA1A3-487A-4439-96CC-C4FBB52E7926}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{0F32310C-A95E-405B-AB67-36D6D0015EF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F32310C-A95E-405B-AB67-36D6D0015EF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F32310C-A95E-405B-AB67-36D6D0015EF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B448282B-9940-42E5-81EB-ADC02E9B93CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B448282B-9940-42E5-81EB-ADC02E9B93CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B448282B-9940-42E5-81EB-ADC02E9B93CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B448282B-9940-42E5-81EB-ADC02E9B93CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA8CA1A3-487A-4439-96CC-C4FBB52E7926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA8CA1A3-487A-4439-96CC-C4FBB52E7926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA8CA1A3-487A-4439-96CC-C4FBB52E7926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA8CA1A3-487A-4439-96CC-C4FBB52E7926}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

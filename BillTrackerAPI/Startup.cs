@@ -49,8 +49,27 @@ namespace BillTrackerAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Biil Tracker", Version = "v1" });
             });
 
-            services.AddControllers()
-    .AddNewtonsoftJson(options => options.UseMemberCasing());
+            services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing());
+
+            services.AddAuthentication("Bearer")
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.Authority = "https://localhost:5001";
+                options.RequireHttpsMetadata = false;
+
+                options.Audience = "trackerApi";
+            });
+
+            services.AddCors(options =>
+            {
+                // this defines a CORS policy called "default"
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("https://localhost:44388")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +94,13 @@ namespace BillTrackerAPI
                 app.UseHsts();
             }
 
+
             app.UseRouting();
+
+            app.UseCors("default");
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

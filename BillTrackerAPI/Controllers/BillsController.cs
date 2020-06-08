@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BillTrackerAPI.Data.Models;
 using BillTrackerAPI.Data.MongoDB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,6 +13,7 @@ namespace BillTrackerAPI.Controllers
 {
     [Route("api/Bills")]
     [ApiController]
+    [Authorize]
     public class BillsController : BillTrackerController<BillService, Bill>
     {
         public BillsController(BillService service) : base(service)
