@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BillTrackerAuthentication.Quickstart.Account;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -45,6 +46,72 @@ namespace IdentityServer4.Quickstart.UI
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Register(string returnUrl)
+        {
+            RegisterInputModel model = new RegisterInputModel()
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterInputModel model, string button)
+        {
+            string returnUrl = model.ReturnUrl ?? Url.Content("~/");
+            // check if we are in the context of an authorization request
+            var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+
+            if (button != "register")
+            {
+                
+                if (context != null)
+                {
+                    if(button == "login")
+                    {
+                        RedirectToAction("Login", new { returnUrl = returnUrl });
+                    }
+                    // if the user cancels, send a result back into IdentityServer as if they 
+                    // denied the consent (even if this client does not require consent).
+                    // this will send back an access denied OIDC error response to the client.
+                    await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
+
+                    // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+                    if (await _clientStore.IsPkceClientAsync(context.ClientId))
+                    {
+                        // if the client is PKCE then we assume it's native, so this change in how to
+                        // return the response is for better UX for the end user.
+                        return this.LoadingPage("Redirect", model.ReturnUrl);
+                    }
+
+                    return Redirect(returnUrl);
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                   return RedirectToAction("Login", new { returnUrl = returnUrl });
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                return View(model);
+            }
+
+            return View(model);
+
         }
 
         /// <summary>
@@ -80,6 +147,10 @@ namespace IdentityServer4.Quickstart.UI
             {
                 if (context != null)
                 {
+                    if (button == "register")
+                    {
+                        return RedirectToAction("Register", new { returnUrl = model.ReturnUrl });
+                    }
                     // if the user cancels, send a result back into IdentityServer as if they 
                     // denied the consent (even if this client does not require consent).
                     // this will send back an access denied OIDC error response to the client.

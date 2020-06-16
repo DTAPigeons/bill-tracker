@@ -29,7 +29,6 @@ namespace BillTrackerAuthentication
             new Client[]
             {
                 
-                // SPA client using code flow + pkce
                 new Client
                 {
                     ClientId = "js",
@@ -44,6 +43,17 @@ namespace BillTrackerAuthentication
                     PostLogoutRedirectUris = { "https://localhost:44388/index.html" },
                     AllowedCorsOrigins = { "https://localhost:44388" },
 
+                    AllowedScopes = { IdentityServerConstants.StandardScopes.OpenId,
+                                      IdentityServerConstants.StandardScopes.Profile,
+                                      "trackerApi" }
+                },
+
+                new Client
+                {
+                    ClientId = "identity_server",
+                    ClientName = "Identity Server",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
                     AllowedScopes = { IdentityServerConstants.StandardScopes.OpenId,
                                       IdentityServerConstants.StandardScopes.Profile,
                                       "trackerApi" }

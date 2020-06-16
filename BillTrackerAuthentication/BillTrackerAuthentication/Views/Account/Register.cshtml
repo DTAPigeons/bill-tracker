@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model BillTrackerAuthentication.Quickstart.Account.RegisterInputModel
+@{
+    ViewData["Title"] = "Register";
+}
+<h2>@ViewData["Title"]</h2>
+
+
+<partial name="_ValidationSummary" />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route="Register">
+            <input type="hidden" asp-for="ReturnUrl" />
+            <fieldset>
+
+                <h4>Create a new account.</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="@Model.Email"></label>
+                    <input asp-for="@Model.Email" class="form-control" />
+                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Password"></label>
+                    <input asp-for="@Model.Password" class="form-control" />
+                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.ConfirmPassword"></label>
+                    <input asp-for="@Model.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button name="button" value="register" class="btn btn-default">Register</button>
+                    <button class="btn btn-primary" name="button" value="login">Login</button>
+                    <button class="btn btn-default" name="button" value="cancel">Cancel</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
