@@ -20,6 +20,19 @@ namespace BillTrackerAPI.Controllers
         {
         }
 
+        [HttpGet("{accountName:length(50)}")]
+        public async Task<ActionResult<User>> GetByAccountName(string accountName)
+        {
+            var item = await service.GetUserByAccountName(accountName);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
         public async override Task<ActionResult<User>> Create(User item)
         {
             var user = await service.GetUserByAccountName(item.AccountName);
