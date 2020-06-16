@@ -1,7 +1,7 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model BillTrackerAuthentication.Quickstart.Account.RegisterInputModel
+@model BillTrackerAuthentication.Quickstart.Account.UserRegisterViewModel
 @{
     ViewData["Title"] = "Register";
 }
@@ -13,26 +13,41 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-route="Register">
-            <input type="hidden" asp-for="ReturnUrl" />
+            <input type="hidden" asp-for="@Model.RegisterInputModel.ReturnUrl" />
             <fieldset>
 
                 <h4>Create a new account.</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="@Model.Email"></label>
-                    <input asp-for="@Model.Email" class="form-control" />
-                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                    <label asp-for="@Model.RegisterInputModel.Email"></label>
+                    <input asp-for="@Model.RegisterInputModel.Email" class="form-control" />
+                    <span asp-validation-for="@Model.RegisterInputModel.Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.Password"></label>
-                    <input asp-for="@Model.Password" class="form-control" />
-                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                    <label asp-for="@Model.RegisterInputModel.Password"></label>
+                    <input asp-for="@Model.RegisterInputModel.Password" class="form-control" />
+                    <span asp-validation-for="@Model.RegisterInputModel.Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.ConfirmPassword"></label>
-                    <input asp-for="@Model.ConfirmPassword" class="form-control" />
-                    <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                    <label asp-for="@Model.RegisterInputModel.ConfirmPassword"></label>
+                    <input asp-for="@Model.RegisterInputModel.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="@Model.RegisterInputModel.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.FirstName"></label>
+                    <input asp-for="@Model.FirstName" class="form-control" />
+                    <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.LastName"></label>
+                    <input asp-for="@Model.LastName" class="form-control" />
+                    <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Income"></label>
+                    <input asp-for="@Model.Income" class="form-control" />
+                    <span asp-validation-for="@Model.Income" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <button name="button" value="register" class="btn btn-default">Register</button>

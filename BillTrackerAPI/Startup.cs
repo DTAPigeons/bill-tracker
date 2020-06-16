@@ -69,6 +69,12 @@ namespace BillTrackerAPI
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("https://localhost:5001")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
             });
         }
 

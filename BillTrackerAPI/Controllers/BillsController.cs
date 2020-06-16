@@ -16,8 +16,11 @@ namespace BillTrackerAPI.Controllers
     [Authorize]
     public class BillsController : BillTrackerController<BillService, Bill>
     {
-        public BillsController(BillService service) : base(service)
+        readonly UserService _userService;
+
+        public BillsController(BillService service, UserService userService) : base(service)
         {
+            _userService = userService;
         }
 
         [HttpGet("user/{userId:length(24)}")]
@@ -25,6 +28,13 @@ namespace BillTrackerAPI.Controllers
         {
             return await GetAll(bill => bill.UserId == userId);
 
+        }
+
+        public override Task<ActionResult<Bill>> Create(Bill item)
+        {
+            var user = _userService.GetById(item.UserId);
+            item.UserId = null;
+            return base.Create(item);
         }
     }
 }

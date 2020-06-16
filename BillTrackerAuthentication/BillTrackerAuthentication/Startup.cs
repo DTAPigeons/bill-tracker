@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using BillTrackerAuthentication.ApiServeses;
 using BillTrackerAuthentication.Data;
 using BillTrackerAuthentication.Models;
 using Microsoft.AspNetCore.Builder;
@@ -49,7 +50,9 @@ namespace BillTrackerAuthentication
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            
+
+            services.AddSingleton<ApiClient>();
+
             var builder = services.AddIdentityServer(options =>
                 {
                     options.Events.RaiseErrorEvents = true;

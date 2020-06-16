@@ -15,7 +15,7 @@ namespace BillTrackerAPI.Controllers
         where TService: MongoService<TModel>
         where TModel: BaseEntity
     {
-        private readonly TService service;
+        protected readonly TService service;
 
         public BillTrackerController(TService service)
         {
@@ -25,19 +25,19 @@ namespace BillTrackerAPI.Controllers
 
         
         [HttpGet]
-        public async Task<ActionResult<List<TModel>>> GetAll()
+        public virtual async Task<ActionResult<List<TModel>>> GetAll()
         {
             return await GetAll(item => true);
         }
 
-        protected async Task<ActionResult<List<TModel>>> GetAll(Expression<Func<TModel, bool>> filterExpression)
+        protected virtual async Task<ActionResult<List<TModel>>> GetAll(Expression<Func<TModel, bool>> filterExpression)
         {
             return await service.GetAll(filterExpression);
         }
 
         
         [HttpGet("{id:length(24)}")]
-        public async Task<ActionResult<TModel>> GetById(string id)
+        public virtual async Task<ActionResult<TModel>> GetById(string id)
         {
             var item = await service.GetById(id);
 
@@ -52,9 +52,14 @@ namespace BillTrackerAPI.Controllers
         
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, TModel itemIn)
+        public virtual async Task<IActionResult> Put(string id, TModel itemIn)
         {
             var item = await service.GetById(id);
+
+            if (!itemIn.IsValid())
+            {
+                return BadRequest();
+            }
 
             if (id != item.Id)
             {
@@ -73,8 +78,13 @@ namespace BillTrackerAPI.Controllers
 
         
         [HttpPost]
-        public async Task<ActionResult<TModel>> Create(TModel item)
+        public virtual async Task<ActionResult<TModel>> Create(TModel item)
         {
+            if (!item.IsValid())
+            {
+                return BadRequest();
+            }
+
             await service.Create(item);
 
             return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
@@ -82,7 +92,7 @@ namespace BillTrackerAPI.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TModel>> DeleteUser(string id)
+        public virtual async Task<ActionResult<TModel>> DeleteUser(string id)
         {
             var item = await service.GetById(id);
             if (item == null)

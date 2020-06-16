@@ -10,7 +10,7 @@ namespace BillTrackerAPI.Data.MongoDB
 {
     public abstract class MongoService<TModel> where TModel:BaseEntity
     {
-        private IMongoCollection<TModel> collection;
+        IMongoCollection<TModel> collection;
 
         public MongoService(IMongoDBSettings settings, string collectionName)
         {

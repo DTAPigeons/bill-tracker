@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BillTrackerAuthentication.Quickstart.Account;
+using BillTrackerAuthentication.ApiServeses;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -31,6 +32,7 @@ namespace IdentityServer4.Quickstart.UI
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+        private readonly ApiClient _apiClient;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -38,7 +40,9 @@ namespace IdentityServer4.Quickstart.UI
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events)
+            IEventService events,
+            ApiClient apiClient
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -46,16 +50,22 @@ namespace IdentityServer4.Quickstart.UI
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+            _apiClient = apiClient;
         }
 
 
         [HttpGet]
         public async Task<IActionResult> Register(string returnUrl)
         {
-            RegisterInputModel model = new RegisterInputModel()
+            RegisterInputModel regModel = new RegisterInputModel()
             {
                 ReturnUrl = returnUrl,
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            UserRegisterViewModel model = new UserRegisterViewModel()
+            {
+                RegisterInputModel = regModel
             };
 
             return View(model);
@@ -63,11 +73,11 @@ namespace IdentityServer4.Quickstart.UI
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterInputModel model, string button)
+        public async Task<IActionResult> Register(UserRegisterViewModel model, string button)
         {
-            string returnUrl = model.ReturnUrl ?? Url.Content("~/");
+            string returnUrl = model.RegisterInputModel.ReturnUrl ?? Url.Content("~/");
             // check if we are in the context of an authorization request
-            var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+            var context = await _interaction.GetAuthorizationContextAsync(model.RegisterInputModel.ReturnUrl);
 
             if (button != "register")
             {
@@ -88,7 +98,7 @@ namespace IdentityServer4.Quickstart.UI
                     {
                         // if the client is PKCE then we assume it's native, so this change in how to
                         // return the response is for better UX for the end user.
-                        return this.LoadingPage("Redirect", model.ReturnUrl);
+                        return this.LoadingPage("Redirect", model.RegisterInputModel.ReturnUrl);
                     }
 
                     return Redirect(returnUrl);
@@ -96,8 +106,14 @@ namespace IdentityServer4.Quickstart.UI
             }
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var apiResponce = await _apiClient.PostUser(model);
+                if (!apiResponce.IsSuccessStatusCode)
+                {
+                    ModelState.AddModelError(string.Empty, "Cloud not add User. Error code: "+apiResponce.StatusCode);
+                    return View(model);
+                }
+                var user = new ApplicationUser { UserName = model.RegisterInputModel.Email, Email = model.RegisterInputModel.Email };
+                var result = await _userManager.CreateAsync(user, model.RegisterInputModel.Password);
                 if (result.Succeeded)
                 {
                    return RedirectToAction("Login", new { returnUrl = returnUrl });
