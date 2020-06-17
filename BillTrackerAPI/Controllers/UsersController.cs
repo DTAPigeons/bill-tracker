@@ -20,6 +20,7 @@ namespace BillTrackerAPI.Controllers
         {
         }
 
+        
         [HttpGet("{accountName:length(50)}")]
         public async Task<ActionResult<User>> GetByAccountName(string accountName)
         {

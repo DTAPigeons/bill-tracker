@@ -13,7 +13,9 @@ function log() {
 }
 
 document.getElementById("login").addEventListener("click", login, false);
-document.getElementById("api").addEventListener("click", api, false);
+document.getElementById("users").addEventListener("click", users, false);
+document.getElementById("bills").addEventListener("click", bills, false);
+document.getElementById("userBills").addEventListener("click", userBills, false);
 document.getElementById("logout").addEventListener("click", logout, false);
 
 var config = {
@@ -48,7 +50,7 @@ function login() {
     mgr.signinRedirect();
 }
 
-function api() {
+function users() {
     mgr.getUser().then(function (user) {
         var url = "https://localhost:44328/api/Users";
 
@@ -61,6 +63,47 @@ function api() {
         xhr.send();
     });
 }
+
+function bills() {
+    mgr.getUser().then(function (user) {
+        var url = "https://localhost:44328/api/Bills";
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.onload = function () {
+            log(xhr.status, JSON.parse(xhr.responseText));
+        }
+        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
+        xhr.send();
+    });
+}
+
+function userBills() {
+    mgr.getUser().then(function (user) {
+        var url = "https://localhost:44328/api/Users/";
+        var us = user.profile;
+
+        url += "accountName:"+ us.name;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.onload = function () {
+            var userToFetch = JSON.parse(xhr.responseText);
+            var url = "https://localhost:44328/api/Bills/user/userId:" + userToFetch.Id;
+
+            var xhr2 = new XMLHttpRequest();
+            xhr2.open("GET", url);
+            xhr2.onload = function () {
+                log(xhr2.status, JSON.parse(xhr2.responseText));
+            }
+            xhr2.setRequestHeader("Authorization", "Bearer " + user.access_token);
+            xhr2.send();
+        }
+        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
+        xhr.send();
+    });
+}
+
 
 function logout() {
     mgr.signoutRedirect();

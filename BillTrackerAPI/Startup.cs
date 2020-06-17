@@ -69,12 +69,14 @@ namespace BillTrackerAPI
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+                /*
                 options.AddPolicy("default", policy =>
                 {
                     policy.WithOrigins("https://localhost:5001")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+                */
             });
         }
 
@@ -113,6 +115,10 @@ namespace BillTrackerAPI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "userName",
+                    pattern: "{controller=Users}/{accountName}"
+                    );
             });
 
             app.UseHttpsRedirection();
