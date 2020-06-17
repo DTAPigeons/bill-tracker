@@ -92,7 +92,7 @@ namespace BillTrackerAPI.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public virtual async Task<ActionResult<TModel>> DeleteUser(string id)
+        public virtual async Task<ActionResult<TModel>> Delete(string id)
         {
             var item = await service.GetById(id);
             if (item == null)

@@ -57,6 +57,15 @@ namespace BillTrackerAuthentication
                     AllowedScopes = { IdentityServerConstants.StandardScopes.OpenId,
                                       IdentityServerConstants.StandardScopes.Profile,
                                       "trackerApi" }
+                },
+
+                new Client
+                {
+                    ClientId = "montly_worker",
+                    ClientName = "Montlly Service Worker",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("montly_worker".Sha256()) },
+                    AllowedScopes = { "trackerApi" }
                 }
             };
     }
